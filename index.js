@@ -1,12 +1,17 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
+const Note = require('./models/note')
 
 app.use(express.json())
 
 app.use(cors())
 
 app.use(express.static('build'))
+
+const password = process.argv[2]
+const url =
+  `mongodb+srv://Bigmus:${password}@cluster0.puyd2.mongodb.net/noteApp?retryWrites=true&w=majority`
 
 
 let notes = [
@@ -36,7 +41,9 @@ let notes = [
   })
 
   app.get('/api/notes', (_request, response) => {
+    Note.find({}).then(notes => {
       response.json(notes)
+    })
   })
 
   app.get('/api/notes/:id', (request, response) => {
